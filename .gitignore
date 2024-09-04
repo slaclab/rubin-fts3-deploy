@@ -1,0 +1,7 @@
+*.swp
+
+# Keep the DB password and cert/key out of the repo
+secrets/
+
+# Keep your local CA certs out of the repo for building the gridcert initcontainer image
+containers/grid-certificates/grid-certificates
