@@ -6,6 +6,6 @@ metadata:
 spec:
   name: fts3-db
   mariaDbRef:
-    name: fts3-db
+    name: fts3-db-cluster
   characterSet: utf8
   collate: utf8_general_ci

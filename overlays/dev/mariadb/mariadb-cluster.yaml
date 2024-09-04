@@ -1,7 +1,7 @@
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: MariaDB
 metadata:
-  name: fts3-db
+  name: fts3-db-cluster
   namespace: fts3-db
 spec:
   rootPasswordSecretKeyRef:
@@ -12,7 +12,6 @@ spec:
   passwordSecretKeyRef:
     name: mariadb-user
     key: password
-  database: mariadb
 
   port: 3306
 
