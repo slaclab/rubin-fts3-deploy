@@ -1,0 +1,4 @@
+namespace: fts3
+
+resources:
+  - ns.yaml

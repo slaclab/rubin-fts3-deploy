@@ -1,4 +1,4 @@
 
 bases:
-#- fts3/
+- fts3/
 - mariadb/
