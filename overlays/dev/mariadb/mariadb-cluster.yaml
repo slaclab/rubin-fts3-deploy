@@ -8,6 +8,7 @@ spec:
     name: mariadb-root
     key: password
 
+  database: fts3-db
   username: fts3
   passwordSecretKeyRef:
     name: mariadb-user

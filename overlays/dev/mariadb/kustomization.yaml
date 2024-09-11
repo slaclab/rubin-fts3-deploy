@@ -2,10 +2,11 @@ namespace: fts3-db
 
 resources:
   - ns.yaml
+  - mariadb-cluster.yaml
+  
+  #- fts3-database.yaml
   # - service.yaml
   #- fts3-instance.yaml
-  - mariadb-cluster.yaml
-  - fts3-database.yaml
   #- fts3-grant.yaml
   #- fts3-user.yaml
   #- mariadb-cm.yaml
