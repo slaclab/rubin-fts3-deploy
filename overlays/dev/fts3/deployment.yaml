@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fts3
+  labels:
+    app: fts3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fts3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: fts3
+    spec:
+      volumes:
+        - name: fts3-configs
+          secret:
+            defaultMode: 420
+            secretName: fts3-configs
+        - name: fts3-host-pems
+          secret:
+            defaultMode: 420
+            secretName: fts3-host-pems
+      restartPolicy: Always
+      #initContainers:
+      #- name: fetch-crls-first-time
+      #  image: imageregistry.fnal.gov:443/sds/fetch-crl:latest
+      #  command: ['bash', '-c', 'find /etc/grid-security/certificates/ -mindepth 1 | read || (osg-ca-manage setupca --location root --url osg --verbose ; fetch-crl --verbose)']
+      #  volumeMounts:
+      #  - mountPath: /etc/grid-security
+      #    name: grid-security-external
+      #- name: grid-security-external
+      #  persistentVolumeClaim:
+      #    claimName: grid-security
+      #- emptyDir: {}
+      #  name: fts3containers-volume-1
+      containers:
+        - name: fts3
+          image: docker.io/bjwhitefnal/fts3-al9:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 4Gi
+          volumeMounts:
+            - name: fts3-configs
+              mountPath: /opt/fts3/fts3-configs
+              readOnly: true
+            - name: fts3-host-pems
+              mountPath: /opt/fts3/fts3-host-pems
+              readOnly: true
+            #- mountPath: /etc/grid-security-external
+            #  name: grid-security-external
+            #- mountPath: /sys/fs/cgroup
+            #  name: fts3containers-volume-1
+          ports:
+            - containerPort: 8446
+              protocol: TCP
+            - containerPort: 8449
+              protocol: TCP
+          env:
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-db
+                  key: username
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-db
+                  key: password
+            - name: MARIADB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-db
+                  key: conn-str
+            - name: FTS3_MARIADB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-db
+                  key: db-name
+            - name: WEB_INTERFACE
+              value: usdf-fts3-dev.slac.stanford.edu
+            #- name: DATABASE_UPGRADE
+            #  value: "yes"
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - mysql --host=${MARIADB_CONNECTION_STRING} -P 3306 --user=$MARIADB_USER --password="$MARIADB_PASSWORD" --database=fts3-db -e 'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1

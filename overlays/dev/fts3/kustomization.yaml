@@ -2,3 +2,27 @@ namespace: fts3
 
 resources:
   - ns.yaml
+  - deployment.yaml
+
+secretGenerator:
+  - name: fts3-configs
+    options:
+      disableNameSuffixHash: true
+    files:
+    - fts3config=etc/fts3config
+    - fts3restconfig=etc/fts3restconfig
+    - fts-msg-monitoring.conf=etc/fts-msg-monitoring.conf
+  - name: fts3-host-pems
+    options:
+      disableNameSuffixHash: true
+    files:
+    - hostcert.pem=etc/secrets/hostcert.pem
+    - hostkey.pem=etc/secrets/hostkey.pem
+  - name: fts3-db
+    options:
+      disableNameSuffixHash: true
+    files:
+    - password=etc/secrets/fts3db-fts3-password
+    - username=etc/secrets/fts3db-username
+    - conn-str=etc/secrets/fts3db-connection-string
+    - db-name=etc/secrets/fts3db-name
