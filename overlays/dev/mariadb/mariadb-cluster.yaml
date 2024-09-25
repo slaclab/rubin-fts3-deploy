@@ -27,7 +27,10 @@ spec:
     binlog_format=row
     innodb_autoinc_lock_mode=2
     max_allowed_packet=256M
-    max_connections=40
+
+    [mysqld]
+    user="fts3"
+    max_user_connections=0
 
   resources:
     requests:
