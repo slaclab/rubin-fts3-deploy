@@ -3,6 +3,7 @@ namespace: fts3
 resources:
   - ns.yaml
   - deployment.yaml
+  - service.yaml
 
 secretGenerator:
   - name: fts3-configs
