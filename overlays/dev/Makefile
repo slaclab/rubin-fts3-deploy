@@ -5,17 +5,18 @@ helm:
 	helm repo add mariadb-operator https://helm.mariadb.com/mariadb-operator
 	helm repo update mariadb-operator
 
-#get-secrets:
-#	mkdir -p fts3/etc/.secrets
-#	vault kv get --field=hostcert.pem secret/rubin/usdf-fts3-dev/fts3  > fts3/etc/.secrets/fts3-hostcert.pem
-#	vault kv get --field=hostkey.pem secret/rubin/usdf-fts3-dev/fts3  > fts3/etc/.secrets/fts3-hostkey.pem
-#	vault kv get --field=usdf-fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/.secrets/fts3db-fts3-password
-#	vault kv get --field=usdf-fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/.secrets/fts3db-username
-#	vault kv get --field=usdf-fts3db-fts3connstr secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/.secrets/fts3db-fts3connstr
-#	mkdir -p mariadb/etc/.secrets
-#	vault kv get --field=usdf-fts3db-root-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/.secrets/fts3db-root-password
-#	vault kv get --field=usdf-fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/.secrets/fts3db-fts3-password
-#	vault kv get --field=usdf-fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/.secrets/fts3db-username
+get-secrets:
+	mkdir -p fts3/etc/secrets
+	vault kv get --field=hostcert.pem secret/rubin/usdf-fts3-dev/fts3  > fts3/etc/secrets/hostcert.pem
+	vault kv get --field=hostkey.pem secret/rubin/usdf-fts3-dev/fts3  > fts3/etc/secrets/hostkey.pem
+	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/secrets/fts3db-fts3-password
+	vault kv get --field=fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/secrets/fts3db-username
+	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/secrets/fts3db-connection-string
+	vault kv get --field=fts3db-name secret/rubin/usdf-fts3-dev/fts3db  > fts3/etc/secrets/fts3db-name
+	mkdir -p mariadb/etc/secrets
+	vault kv get --field=fts3db-root-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-root-password
+	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-fts3-password
+	vault kv get --field=fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-username
 
 #cert-manager:
 #	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
@@ -28,8 +29,8 @@ helm:
 #mariadb-operator:
 #	helm template mariadb-operator mariadb-operator/mariadb-operator --version=${MARIADB_OPERATOR_CHART_VERSION} --values=mariadb-operator/values-mariadb-operator.yaml > mariadb-operator/helm-mariadb-operator.yaml
 
-#clean-secrets:
-#	rm -rf fts3/etc/.secrets mariadb/etc/.secrets
+clean-secrets:
+	rm -rf fts3/etc/secrets mariadb/etc/secrets
 
 #run-dump: 
 #	kubectl kustomize .
@@ -40,6 +41,6 @@ run-apply:
 	kubectl apply -k .
 
 #apply: helm get-secrets cert-manager wait-cert-manager mariadb-operator run-apply clean-secrets
-apply: run-apply
+apply: get-secrets run-apply clean-secrets
 
 
