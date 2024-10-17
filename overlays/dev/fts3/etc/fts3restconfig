@@ -19,7 +19,7 @@ AuthorizedVO = *
 Alias = usdf-fts3-dev.slac.stanford.edu
 
 # Site name running the FTS3 service
-SiteName = USDF Development FTS3
+SiteName = USDF Development
 
 # Inform the REST component whether the Optimizer service is running
 Optimizer = True

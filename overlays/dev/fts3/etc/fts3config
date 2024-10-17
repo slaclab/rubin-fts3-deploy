@@ -63,7 +63,7 @@ MaxNumberOfProcesses=25000
 ###MaxUrlCopyProcesses=400
 
 # site name
-SiteName=USDF Development FTS3
+SiteName=USDF Development
 
 #Enable/Disable monitoring using messaging monitoring (disabled=false / enabled=true)
 MonitoringMessaging=true
