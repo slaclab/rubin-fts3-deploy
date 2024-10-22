@@ -29,19 +29,17 @@ spec:
           secret:
             defaultMode: 420
             secretName: fts3-host-pems
+        - name: grid-certificates
+          emptyDir: {}
       restartPolicy: Always
-      #initContainers:
-      #- name: fetch-crls-first-time
-      #  image: imageregistry.fnal.gov:443/sds/fetch-crl:latest
-      #  command: ['bash', '-c', 'find /etc/grid-security/certificates/ -mindepth 1 | read || (osg-ca-manage setupca --location root --url osg --verbose ; fetch-crl --verbose)']
-      #  volumeMounts:
-      #  - mountPath: /etc/grid-security
-      #    name: grid-security-external
-      #- name: grid-security-external
-      #  persistentVolumeClaim:
-      #    claimName: grid-security
-      #- emptyDir: {}
-      #  name: fts3containers-volume-1
+      initContainers:
+      - name: fetch-crls-first-time
+        image: docker.io/bjwhitefnal/fts3-al9:latest
+        imagePullPolicy: Always
+        #command: ['bash', '-c', 'find /etc/grid-security/certificates/ -mindepth 1 | read || (osg-ca-manage setupca --location root --url osg --verbose ; fetch-crl --verbose)']
+        volumeMounts:
+          - name: grid-certificates
+            mountPath: /out/
       containers:
         - name: fts3
           image: docker.io/bjwhitefnal/fts3-al9:latest
@@ -57,8 +55,8 @@ spec:
             - name: fts3-host-pems
               mountPath: /opt/fts3/fts3-host-pems
               readOnly: true
-            #- mountPath: /etc/grid-security-external
-            #  name: grid-security-external
+            - name: grid-certificates
+              mountPath: /etc/grid-security/certificates
             #- mountPath: /sys/fs/cgroup
             #  name: fts3containers-volume-1
           ports:
@@ -99,7 +97,7 @@ spec:
               - -c
               - mysql --host=${MARIADB_CONNECTION_STRING} -P 3306 --user=$MARIADB_USER --password="$MARIADB_PASSWORD" --database=fts3-db -e 'SELECT 1'
             failureThreshold: 3
-            initialDelaySeconds: 3
+            initialDelaySeconds: 30
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
