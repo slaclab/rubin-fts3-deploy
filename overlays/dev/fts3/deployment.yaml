@@ -36,7 +36,6 @@ spec:
       - name: fetch-crls-first-time
         image: docker.io/bjwhitefnal/fetch-crl-cron:latest
         imagePullPolicy: Always
-        #command: ['bash', '-c', 'find /etc/grid-security/certificates/ -mindepth 1 | read || (osg-ca-manage setupca --location root --url osg --verbose ; fetch-crl --verbose)']
         volumeMounts:
           - name: grid-certificates
             mountPath: /out/
