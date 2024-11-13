@@ -30,7 +30,8 @@ spec:
             defaultMode: 420
             secretName: fts3-host-pems
         - name: grid-certificates
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: grid-certificates-pvc
       restartPolicy: Always
       initContainers:
       - name: fetch-crls-first-time
@@ -56,8 +57,6 @@ spec:
               readOnly: true
             - name: grid-certificates
               mountPath: /etc/grid-security/certificates
-            #- mountPath: /sys/fs/cgroup
-            #  name: fts3containers-volume-1
           ports:
             - containerPort: 8446
               protocol: TCP

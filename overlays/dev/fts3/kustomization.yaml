@@ -2,8 +2,10 @@ namespace: fts3
 
 resources:
   - ns.yaml
+  - pvcs.yaml
   - deployment.yaml
   - service.yaml
+  - cronjobs.yaml
 
 secretGenerator:
   - name: fts3-configs
