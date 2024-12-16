@@ -31,7 +31,9 @@ Alias=usdf-fts3-dev.slac.stanford.edu
 TransferLogDirectory=/var/log/fts3/transfers
 
 #Infosys, either the fqdn:port of a BDII instance or false to disable BDII access
-Infosys=lcg-bdii.cern.ch:2170
+#Infosys=lcg-bdii.cern.ch:2170
+Infosys=false
+
 
 #keep_alive socket for ldap connection
 BDIIKeepAlive=true
