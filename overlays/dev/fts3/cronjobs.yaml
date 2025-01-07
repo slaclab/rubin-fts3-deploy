@@ -26,5 +26,5 @@ spec:
           - name: grid-certificates
             persistentVolumeClaim:
               claimName: grid-certificates-pvc
-  schedule: 0 */3 * * *
+  schedule: "0 */3 * * *"
   suspend: false
