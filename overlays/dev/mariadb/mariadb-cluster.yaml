@@ -69,7 +69,7 @@ spec:
   replicas: 3
 
   storage:
-    size: 1Gi
+    size: 10Gi
     resizeInUseVolumes: true
     waitForVolumeResize: true
     storageClassName: wekafs--sdf-k8s01
@@ -78,7 +78,7 @@ spec:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: 10Gi
       storageClassName: wekafs--sdf-k8s01
 
   #env:
