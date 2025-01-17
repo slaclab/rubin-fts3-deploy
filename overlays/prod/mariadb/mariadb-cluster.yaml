@@ -1,0 +1,96 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: fts3-db-cluster
+  namespace: fts3-db
+spec:
+  rootPasswordSecretKeyRef:
+    name: mariadb-root
+    key: password
+
+  database: fts3-db
+  username: fts3
+  passwordSecretKeyRef:
+    name: mariadb-user
+    key: password
+
+  port: 3306
+
+  image: docker-registry1.mariadb.com/library/mariadb:11.4.3
+
+  imagePullPolicy: IfNotPresent
+
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    max_allowed_packet=256M
+
+    [mysqld]
+    user="fts3"
+    max_user_connections=0
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+
+  livenessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+
+  readinessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+
+  replication:
+    enabled: true
+    primary:
+      podIndex: 0
+      automaticFailover: true
+    replica:
+      waitPoint: AfterSync
+      gtid: CurrentPos
+      replPasswordSecretKeyRef:
+        name: mariadb-user
+        key: password
+      connectionTimeout: 10s
+      connectionRetries: 10
+      syncTimeout: 10s
+    syncBinlog: true
+    probesEnabled: true
+  replicas: 3
+
+  storage:
+    size: 10Gi
+    resizeInUseVolumes: true
+    waitForVolumeResize: true
+    storageClassName: wekafs--sdf-k8s01
+    volumeClaimTemplate:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: wekafs--sdf-k8s01
+
+  #env:
+  #  - name: TZ
+  #    value: SYSTEM
+
+  #envFrom:
+  #  - configMapRef:
+  #      name: mariadb
+
+  #podSecurityContext:
+  #  runAsUser: 0
+
+  #securityContext:
+  #  allowPrivilegeEscalation: false

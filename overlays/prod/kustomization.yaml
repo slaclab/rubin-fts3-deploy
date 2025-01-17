@@ -1,0 +1,4 @@
+
+bases:
+- fts3/
+- mariadb/
