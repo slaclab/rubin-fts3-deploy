@@ -32,6 +32,9 @@ spec:
         - name: grid-certificates
           persistentVolumeClaim:
             claimName: grid-certificates-pvc
+        - name: fts3-logs
+          persistentVolumeClaim:
+            claimName: fts3-logs-pvc
       restartPolicy: Always
       initContainers:
       - name: fetch-crls-first-time
@@ -39,6 +42,13 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
           - name: grid-certificates
+            mountPath: /out/
+      - name: prep-log-pvc
+        image: docker.io/bjwhitefnal/fts3-al9:latest
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
+        volumeMounts:
+          - name: fts3-logs
             mountPath: /out/
       containers:
         - name: fts3
@@ -57,6 +67,8 @@ spec:
               readOnly: true
             - name: grid-certificates
               mountPath: /etc/grid-security/certificates
+            - name: fts3-logs
+              mountPath: /var/log
           ports:
             - containerPort: 8446
               protocol: TCP
