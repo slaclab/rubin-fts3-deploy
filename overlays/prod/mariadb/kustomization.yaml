@@ -2,6 +2,7 @@ namespace: fts3-db
 
 resources:
   - ns.yaml
+  - users.yaml
   - mariadb-cluster.yaml
 
 secretGenerator:

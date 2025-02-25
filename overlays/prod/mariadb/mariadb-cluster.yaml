@@ -29,7 +29,6 @@ spec:
     max_allowed_packet=256M
 
     [mysqld]
-    user="fts3"
     max_user_connections=0
 
   resources:
