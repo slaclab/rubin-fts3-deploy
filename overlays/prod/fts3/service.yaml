@@ -9,7 +9,7 @@ metadata:
     metallb.universe.tf/address-pool: sdf-dmz
 spec:
   type: LoadBalancer
-  externalIPs: ["134.79.23.226"]
+  externalIPs: ["134.79.23.198"]
   ports:
     - port: 8446
       targetPort: 8446
