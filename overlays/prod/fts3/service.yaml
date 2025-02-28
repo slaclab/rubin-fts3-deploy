@@ -7,9 +7,9 @@ metadata:
   namespace: fts3
   annotations:
     metallb.universe.tf/address-pool: sdf-dmz
+    metallb.universe.tf/loadBalancerIPs: 134.79.23.193
 spec:
   type: LoadBalancer
-  externalIPs: ["134.79.23.198"]
   ports:
     - port: 8446
       targetPort: 8446
