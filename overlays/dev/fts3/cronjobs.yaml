@@ -28,3 +28,26 @@ spec:
               claimName: grid-certificates-pvc
   schedule: "0 */3 * * *"
   suspend: false
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fts3-log-cleanup
+spec:
+  schedule: "45 3 * * *" # Runs daily 0345
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: log-cleanup
+            image: docker.io/bjwhitefnal/fts3-al9
+            command: ["/bin/sh", "-c", "find /logs/fts3/transfers -type f -mtime +14 -delete"]
+            volumeMounts:
+            - name: fts3-logs
+              mountPath: /logs
+          restartPolicy: OnFailure
+          volumes:
+          - name: fts3-logs
+            persistentVolumeClaim:
+              claimName: fts3-logs-pvc
