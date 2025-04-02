@@ -42,7 +42,7 @@ spec:
           containers:
           - name: log-cleanup
             image: docker.io/bjwhitefnal/fts3-al9
-            command: ["/bin/sh", "-c", "find /logs/fts3/transfers -type f -mtime +14 -delete"]
+            command: ["/bin/sh", "-c", "find /logs/fts3/transfers -mtime +14 -exec rm -rv {} +"]
             volumeMounts:
             - name: fts3-logs
               mountPath: /logs
