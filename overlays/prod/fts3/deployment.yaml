@@ -56,8 +56,8 @@ spec:
           imagePullPolicy: Always
           resources:
             limits:
-              cpu: 2000m
-              memory: 6Gi
+              cpu: 4000m
+              memory: 12Gi
           volumeMounts:
             - name: fts3-configs
               mountPath: /opt/fts3/fts3-configs
