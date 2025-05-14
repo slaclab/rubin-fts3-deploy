@@ -17,6 +17,10 @@ get-secrets:
 	vault kv get --field=fts3db-root-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-root-password
 	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-fts3-password
 	vault kv get --field=fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-username
+	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-fts3-password
+	vault kv get --field=fts3db-username secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-username
+	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-connection-string
+	vault kv get --field=fts3db-name secret/rubin/usdf-fts3-dev/fts3db  > mariadb/etc/secrets/fts3db-name
 
 #cert-manager:
 #	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml

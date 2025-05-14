@@ -1,0 +1,17 @@
+namespace: mariadb-operator
+
+resources:
+  - ns.yaml
+  - crds/crds.yaml
+  - resources/cert-controller/serviceaccount.yaml
+  - resources/operator/serviceaccount.yaml
+  - resources/webhook/serviceaccount.yaml
+  - resources/operator/configmap.yaml
+  - resources/cert-controller/rbac.yaml
+  - resources/operator/rbac-user.yaml
+  - resources/operator/rbac.yaml
+  - resources/webhook/service.yaml
+  - resources/cert-controller/deployment.yaml
+  - resources/operator/deployment.yaml
+  - resources/webhook/deployment.yaml
+  - resources/webhook/config.yaml

@@ -1,0 +1,55 @@
+# Define the 'fts3' user in the database, and create the grants needed for the FTS3 service.
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: fts3
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster
+  passwordSecretKeyRef:
+    name: fts3-db
+    key: password
+  maxUserConnections: 0
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: all-grant
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster
+  privileges:
+    - "ALL PRIVILEGES"
+  database: "fts3db"
+  table: "*"
+  username: fts3
+  grantOption: true
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: super-grant
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster
+  privileges:
+    - "SUPER"
+  database: "*"
+  table: "*"
+  username: fts3
+  grantOption: true
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s

@@ -3,6 +3,7 @@ namespace: fts3-db
 resources:
   - ns.yaml
   - mariadb-cluster.yaml
+  - fts3.yaml
 
 secretGenerator:
   - name: mariadb-root
@@ -16,3 +17,10 @@ secretGenerator:
     files:
     - password=etc/secrets/fts3db-fts3-password
     - username=etc/secrets/fts3db-username
+  - name: fts3-db
+    options:
+      disableNameSuffixHash: true
+    files:
+    - password=etc/secrets/fts3db-fts3-password
+    - username=etc/secrets/fts3db-username
+    - conn-str=etc/secrets/fts3db-connection-string

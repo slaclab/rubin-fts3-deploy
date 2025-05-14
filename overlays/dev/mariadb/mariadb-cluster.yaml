@@ -8,8 +8,7 @@ spec:
     name: mariadb-root
     key: password
 
-  database: fts3-db
-  username: fts3
+  database: fts3db
   passwordSecretKeyRef:
     name: mariadb-user
     key: password
@@ -51,20 +50,20 @@ spec:
 
   replication:
     enabled: true
-    primary:
-      podIndex: 0
-      automaticFailover: true
-    replica:
-      waitPoint: AfterSync
-      gtid: CurrentPos
-      replPasswordSecretKeyRef:
-        name: mariadb-user
-        key: password
-      connectionTimeout: 10s
-      connectionRetries: 10
-      syncTimeout: 10s
-    syncBinlog: true
-    probesEnabled: true
+  #  primary:
+  #    podIndex: 0
+  #    automaticFailover: true
+  #  replica:
+  #    waitPoint: AfterSync
+  #    gtid: CurrentPos
+  #    replPasswordSecretKeyRef:
+  #      name: mariadb-user
+  #      key: password
+  #    connectionTimeout: 10s
+  #    connectionRetries: 10
+  #    syncTimeout: 10s
+  #  syncBinlog: true
+  #  probesEnabled: true
   replicas: 3
 
   storage:
