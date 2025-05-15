@@ -105,7 +105,7 @@ spec:
               - /bin/sh
               - -i
               - -c
-              - mysql --host=${MARIADB_CONNECTION_STRING} -P 3306 --user=$MARIADB_USER --password="$MARIADB_PASSWORD" --database=fts3-db -e 'SELECT 1'
+              - mysql --host=${MARIADB_CONNECTION_STRING} -P 3306 --user=$MARIADB_USER --password="$MARIADB_PASSWORD" --database=fts3db -e 'SELECT 1'
             failureThreshold: 3
             initialDelaySeconds: 30
             periodSeconds: 10
