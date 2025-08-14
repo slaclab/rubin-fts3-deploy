@@ -24,7 +24,7 @@ SiteName = USDF Production
 # Inform the REST component whether the Optimizer service is running
 Optimizer = True
 
-# Enable or disable monitoring messages (see fts-msg-monitoring.conf) (default false)
+# Enable or disable monitoring messages (see fts-activemq.conf) (default false)
 MonitoringMessaging = False
 # Enable or disable publishing of user DNs (recommended false)
 MonitoringPublishDN = False
