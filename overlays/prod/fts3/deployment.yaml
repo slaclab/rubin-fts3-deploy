@@ -35,6 +35,9 @@ spec:
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
+        - name: fluent-bit-conf
+          configMap:
+            name: fluent-bit-conf
       restartPolicy: Always
       initContainers:
       - name: fetch-crls-first-time
@@ -111,3 +114,12 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
+        - name: fluent-bit
+          image: fluent/fluent-bit:4.0.7-debug
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: fluent-bit-conf
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: fts3-logs
+              mountPath: /var/log

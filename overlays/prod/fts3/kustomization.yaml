@@ -29,3 +29,8 @@ secretGenerator:
     - username=etc/secrets/fts3db-username
     - conn-str=etc/secrets/fts3db-connection-string
     - db-name=etc/secrets/fts3db-name
+
+configMapGenerator:
+  - name: fluent-bit-conf
+    files:
+    - fluent-bit.conf=etc/fluent-bit.conf
