@@ -45,7 +45,7 @@ HeartBeatInterval = 60
 #SessionReuseMinFiles = 5
 
 # Enable or disable AutoSessionReuse (default false)
-AutoSessionReuse = False
+AutoSessionReuse = true
 # Max number of files per session reuse
 AutoSessionReuseMaxFiles = 1000
 # Max small file size for session reuse in bytes (default 100MB)
