@@ -41,7 +41,7 @@ spec:
         spec:
           containers:
           - name: log-cleanup
-            image: docker.io/bjwhitefnal/fts3-al9
+            image: ghcr.io/fnal-fife/fts3-al9:3.14.2
             command: ["/bin/sh", "-c", "find /logs/fts3/transfers -mtime +14 -exec rm -rv {} +"]
             volumeMounts:
             - name: fts3-logs

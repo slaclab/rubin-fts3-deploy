@@ -14,7 +14,7 @@ secretGenerator:
     files:
     - fts3config=etc/fts3config
     - fts3restconfig=etc/fts3restconfig
-    - fts-msg-monitoring.conf=etc/fts-msg-monitoring.conf
+    - fts-activemq.conf=etc/fts-activemq.conf
   - name: fts3-host-pems
     options:
       disableNameSuffixHash: true
