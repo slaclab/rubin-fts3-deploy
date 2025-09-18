@@ -24,8 +24,8 @@ SiteName = USDF Production
 # Inform the REST component whether the Optimizer service is running
 Optimizer = True
 
-# Enable or disable monitoring messages (see fts-msg-monitoring.conf) (default false)
-MonitoringMessaging = False
+# Enable or disable monitoring messages (see fts-activemq.conf) (default false)
+MonitoringMessaging = True
 # Enable or disable publishing of user DNs (recommended false)
 MonitoringPublishDN = False
 
@@ -45,7 +45,7 @@ HeartBeatInterval = 60
 #SessionReuseMinFiles = 5
 
 # Enable or disable AutoSessionReuse (default false)
-AutoSessionReuse = False
+AutoSessionReuse = true
 # Max number of files per session reuse
 AutoSessionReuseMaxFiles = 1000
 # Max small file size for session reuse in bytes (default 100MB)
@@ -116,7 +116,7 @@ formatter = generic
 
 [handler_log_file]
 class = logging.FileHandler
-args = ('/var/log/fts3rest/fts3rest.log', 'a')
+args = ('/var/log/fts3rest/fts3rest-${HOSTNAME}.log', 'a')
 level = NOTSET
 formatter = generic
 

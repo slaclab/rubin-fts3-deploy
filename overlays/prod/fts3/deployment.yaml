@@ -35,6 +35,12 @@ spec:
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
+        - name: fluent-bit-conf
+          configMap:
+            name: fluent-bit-conf
+        - name: supervisord-conf
+          configMap:
+            name: supervisord-conf
       restartPolicy: Always
       initContainers:
       - name: fetch-crls-first-time
@@ -44,7 +50,7 @@ spec:
           - name: grid-certificates
             mountPath: /out/
       - name: prep-log-pvc
-        image: docker.io/bjwhitefnal/fts3-al9:latest
+        image: ghcr.io/fnal-fife/fts3-al9:3.14.2-slac
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -52,10 +58,13 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: docker.io/bjwhitefnal/fts3-al9:latest
+          image: ghcr.io/fnal-fife/fts3-al9:3.14.2-slac
           imagePullPolicy: Always
           resources:
             limits:
+              cpu: 4000m
+              memory: 20Gi
+            requests:
               cpu: 4000m
               memory: 12Gi
           volumeMounts:
@@ -69,6 +78,9 @@ spec:
               mountPath: /etc/grid-security/certificates
             - name: fts3-logs
               mountPath: /var/log
+            - name: supervisord-conf
+              mountPath: /etc/supervisord.conf
+              subPath: supervisord.conf
           ports:
             - containerPort: 8446
               protocol: TCP
@@ -111,3 +123,12 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
+        - name: fluent-bit
+          image: fluent/fluent-bit:4.0.7-debug
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: fluent-bit-conf
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: fts3-logs
+              mountPath: /var/log

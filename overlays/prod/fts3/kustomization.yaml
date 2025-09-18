@@ -14,7 +14,7 @@ secretGenerator:
     files:
     - fts3config=etc/fts3config
     - fts3restconfig=etc/fts3restconfig
-    - fts-msg-monitoring.conf=etc/fts-msg-monitoring.conf
+    - fts-activemq.conf=etc/fts-activemq.conf
   - name: fts3-host-pems
     options:
       disableNameSuffixHash: true
@@ -29,3 +29,11 @@ secretGenerator:
     - username=etc/secrets/fts3db-username
     - conn-str=etc/secrets/fts3db-connection-string
     - db-name=etc/secrets/fts3db-name
+
+configMapGenerator:
+  - name: fluent-bit-conf
+    files:
+    - fluent-bit.conf=etc/fluent-bit.conf
+  - name: supervisord-conf
+    files:
+    - supervisord.conf=etc/supervisord.conf
