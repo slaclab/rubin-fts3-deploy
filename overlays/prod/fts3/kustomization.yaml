@@ -34,3 +34,6 @@ configMapGenerator:
   - name: fluent-bit-conf
     files:
     - fluent-bit.conf=etc/fluent-bit.conf
+  - name: supervisord-conf
+    files:
+    - supervisord.conf=etc/supervisord.conf

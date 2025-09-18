@@ -25,7 +25,7 @@ SiteName = USDF Production
 Optimizer = True
 
 # Enable or disable monitoring messages (see fts-activemq.conf) (default false)
-MonitoringMessaging = False
+MonitoringMessaging = True
 # Enable or disable publishing of user DNs (recommended false)
 MonitoringPublishDN = False
 
@@ -116,7 +116,7 @@ formatter = generic
 
 [handler_log_file]
 class = logging.FileHandler
-args = ('/var/log/fts3rest/fts3rest.log', 'a')
+args = ('/var/log/fts3rest/fts3rest-${HOSTNAME}.log', 'a')
 level = NOTSET
 formatter = generic
 

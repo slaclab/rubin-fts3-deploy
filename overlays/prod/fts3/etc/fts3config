@@ -29,6 +29,7 @@ Alias=usdf-fts3.slac.stanford.edu
 
 #Default log directory
 TransferLogDirectory=/var/log/fts3/transfers
+ServerLogDirectory=/var/log/fts3-${HOSTNAME}
 
 #Infosys, either the fqdn:port of a BDII instance or false to disable BDII access
 #Infosys=lcg-bdii.cern.ch:2170
@@ -62,12 +63,12 @@ MyOSG=false
 MaxNumberOfProcesses=25000
 
 #Maximum number of fts_url_copy processes to run on the host. This can be used to protect against resource exhaustion.
-MaxUrlCopyProcesses=100
+MaxUrlCopyProcesses=30
 
 # Check for fts_url_copy processes that do not give their progress back
-CheckStalledTransfers = true
+CheckStalledTransfers = false
 # Stalled timeout, in seconds
-CheckStalledTimeout = 900
+#CheckStalledTimeout = 900
 
 # Enable or disable auto session reuse, in fts3rest?
 #AutoSessionReuse = true
@@ -76,7 +77,7 @@ CheckStalledTimeout = 900
 SiteName=USDF Production
 
 #Enable/Disable monitoring using messaging monitoring (disabled=false / enabled=true)
-MonitoringMessaging = False
+MonitoringMessaging = true
 
 LogLevel = DEBUG
 
