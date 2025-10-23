@@ -41,7 +41,7 @@ spec:
         spec:
           containers:
           - name: log-cleanup
-            image: docker.io/bjwhitefnal/fts3-al9
+            image: ghcr.io/fnal-fife/fts3-al9:3.14.2
             env:
             - name: DRY_RUN
               value: "false"  # Set to "true" for test mode
@@ -143,7 +143,6 @@ spec:
               if [ "$DRY_RUN" = "false" ]; then
                 find "$LOG_DIR" -maxdepth 1 -type f -name "*.tar.gz" -mtime +$ARCHIVE_CLEANUP_DAYS -exec rm -v {} + | tee -a "$AUDIT_LOG"
               fi
-
             volumeMounts:
             - name: fts3-logs
               mountPath: /logs
