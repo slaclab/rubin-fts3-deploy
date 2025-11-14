@@ -6,8 +6,8 @@ metadata:
     app: fts3
   namespace: fts3
   annotations:
-    metallb.universe.tf/address-pool: sdf-dmz
-    metallb.universe.tf/loadBalancerIPs: 134.79.23.186
+    metallb.io/address-pool: sdf-dmz
+    metallb.io/loadBalancerIPs: 134.79.23.186
 spec:
   type: LoadBalancer
   ports:
