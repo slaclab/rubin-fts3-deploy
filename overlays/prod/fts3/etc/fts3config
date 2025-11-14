@@ -29,7 +29,7 @@ Alias=usdf-fts3.slac.stanford.edu
 
 #Default log directory
 TransferLogDirectory=/var/log/fts3/transfers
-ServerLogDirectory=/var/log/fts3-${HOSTNAME}
+#ServerLogDirectory=/var/log/fts3-${HOSTNAME}
 
 #Infosys, either the fqdn:port of a BDII instance or false to disable BDII access
 #Infosys=lcg-bdii.cern.ch:2170
