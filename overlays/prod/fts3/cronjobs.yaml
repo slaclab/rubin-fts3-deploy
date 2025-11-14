@@ -15,7 +15,7 @@ spec:
           containers:
           - args:
             name: fetch-crl
-            image: docker.io/bjwhitefnal/fetch-crl-cron:latest
+            image: ghcr.io/fnal-fife/fetch-crl-cron:latest
             imagePullPolicy: Always
             volumeMounts:
             - name: grid-certificates
@@ -34,7 +34,7 @@ kind: CronJob
 metadata:
   name: fts3-log-cleanup
 spec:
-  schedule: "45 3 * * *" # Runs daily 0345
+  schedule: "45 3 * * *"  # Daily at 03:45
   jobTemplate:
     spec:
       template:
@@ -42,7 +42,107 @@ spec:
           containers:
           - name: log-cleanup
             image: ghcr.io/fnal-fife/fts3-al9:3.14.2
-            command: ["/bin/sh", "-c", "find /logs/fts3/transfers -mtime +14 -exec rm -rv {} +"]
+            env:
+            - name: DRY_RUN
+              value: "false"  # Set to "true" for test mode
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+
+              LOG_DIR="/logs"
+              TODAY=$(date +%Y%m%d)
+              AUDIT_LOG="$LOG_DIR/logrotate-audit-$TODAY.log"
+              # Match filenames like name-YYYYMMDD(-YYYYMMDD)*.log
+              ROTATED_PATTERN='.*-[0-9][0-9][0-9][0-9][0-1][0-9][0-3][0-9]\(-[0-9][0-9][0-9][0-9][0-1][0-9][0-3][0-9]\)*\.log$'
+
+              LOG_RETENTION_DAYS=7
+              ARCHIVE_CLEANUP_DAYS=15
+
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "DRY_RUN is enabled. No files will be modified or deleted." | tee -a "$AUDIT_LOG"
+              fi
+
+              echo "Removing older audit logs" | tee -a "$AUDIT_LOG"
+              find "$LOG_DIR" -maxdepth 1 -type f -name "logrotate-audit-*.log" ! -name "$(basename $AUDIT_LOG)" -exec rm -v {} + | tee -a "$AUDIT_LOG"
+
+              echo "Rotating active logs for $TODAY" | tee -a "$AUDIT_LOG"
+              rotate_file() {
+                src="$1"
+                [ -z "$src" ] && return  # Skip empty input paths
+                base_name=$(basename "$src")
+                if echo "$base_name" | grep -q "$ROTATED_PATTERN"; then
+                  echo "SKIP: $src is already rotated" | tee -a "$AUDIT_LOG"
+                  return
+                fi
+                if [ -f "$src" ]; then
+                  echo "Rotating $src" | tee -a "$AUDIT_LOG"
+                  if [ "$DRY_RUN" = "false" ]; then
+                    cp "$src" "${src%.log}-$TODAY.log"
+                    : > "$src"
+                  fi
+                fi
+              }
+
+              for file in \
+                "$LOG_DIR"/fts-msg-bulk*.log \
+                "$LOG_DIR"/fts-qos*.log \
+                "$LOG_DIR"/fts-server*.log \
+                "$LOG_DIR"/fts3rest/fts3rest.log \
+                "$LOG_DIR"/fts3web/fts3web.log \
+                "$LOG_DIR"/httpd/access_log \
+                "$LOG_DIR"/httpd/error_log \
+                "$LOG_DIR"/httpd/fts3rest_access_log \
+                "$LOG_DIR"/httpd/fts3rest_error_log \
+                "$LOG_DIR"/httpd/fts3web_access_log \
+                "$LOG_DIR"/httpd/fts3web_error_log \
+                "$LOG_DIR"/httpd/ssl_access_log \
+                "$LOG_DIR"/httpd/ssl_error_log \
+                "$LOG_DIR"/httpd/ssl_request_log
+              do
+                [ -n "$file" ] && rotate_file "$file"
+              done
+
+              echo "Daily log rotation done." | tee -a "$AUDIT_LOG"
+
+              echo "Archiving logs by date (8–14 days old)" | tee -a "$AUDIT_LOG"
+              for offset in $(seq $((LOG_RETENTION_DAYS + 1)) $((LOG_RETENTION_DAYS + 7))); do
+                day=$(date -d "$offset days ago" +%Y%m%d)
+                day_hyphen=$(date -d "$offset days ago" +%F)
+                archive_name="$LOG_DIR/$day.tar.gz"
+
+                echo "Processing $day" | tee -a "$AUDIT_LOG"
+                tmpdir=$(mktemp -d)
+
+                find "$LOG_DIR" -type f -name "*-$day.log" -exec cp --parents {} "$tmpdir" \;
+
+                if [ -d "$LOG_DIR/fts3/transfers/$day_hyphen" ]; then
+                  mkdir -p "$tmpdir/fts3/transfers"
+                  cp -r "$LOG_DIR/fts3/transfers/$day_hyphen" "$tmpdir/fts3/transfers/"
+                fi
+
+                if [ "$(find "$tmpdir" -type f | wc -l)" -gt 0 ]; then
+                  echo "Creating archive $archive_name" | tee -a "$AUDIT_LOG"
+                  if [ "$DRY_RUN" = "false" ]; then
+                    tar -czf "$archive_name" -C "$tmpdir" .
+                  fi
+                else
+                  echo "No logs to archive for $day" | tee -a "$AUDIT_LOG"
+                fi
+
+                if [ "$DRY_RUN" = "false" ]; then
+                  find "$LOG_DIR" -type f -name "*-$day.log" -delete
+                  rm -rf "$LOG_DIR/fts3/transfers/$day_hyphen"
+                fi
+
+                rm -rf "$tmpdir"
+              done
+
+              echo "🗑️ Cleaning up archives older than $((ARCHIVE_CLEANUP_DAYS - 1)) days" | tee -a "$AUDIT_LOG"
+              if [ "$DRY_RUN" = "false" ]; then
+                find "$LOG_DIR" -maxdepth 1 -type f -name "*.tar.gz" -mtime +$ARCHIVE_CLEANUP_DAYS -exec rm -v {} + | tee -a "$AUDIT_LOG"
+              fi
             volumeMounts:
             - name: fts3-logs
               mountPath: /logs
