@@ -42,6 +42,7 @@ clean-secrets:
 #dump: get-secrets run-dump clean-secrets
 
 run-apply:  
+	kubectl config use-context 'usdf-fts3-dev'
 	kubectl apply -k .
 
 #apply: helm get-secrets cert-manager wait-cert-manager mariadb-operator run-apply clean-secrets
