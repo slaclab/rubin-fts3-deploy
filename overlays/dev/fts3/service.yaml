@@ -7,6 +7,7 @@ metadata:
   namespace: fts3
   annotations:
     metallb.io/address-pool: sdf-dmz
+    #metallb.io/ip-allocated-from-pool: sdf-dmz
     metallb.io/loadBalancerIPs: 134.79.23.186
 spec:
   type: LoadBalancer
@@ -21,3 +22,4 @@ spec:
       name: fts3-mon
   selector:
     app: fts3
+  allocateLoadBalancerNodePorts: false
