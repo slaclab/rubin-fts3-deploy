@@ -1,0 +1,37 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: all-grant-solo
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster-solo
+  privileges:
+    - "ALL PRIVILEGES"
+  database: "fts3db"
+  table: "*"
+  username: fts3
+  grantOption: true
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: super-grant-solo
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster-solo
+  privileges:
+    - "SUPER"
+  database: "*"
+  table: "*"
+  username: fts3
+  grantOption: true
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s
