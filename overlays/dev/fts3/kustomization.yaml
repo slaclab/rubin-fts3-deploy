@@ -4,6 +4,8 @@ resources:
   - ns.yaml
   - pvcs.yaml
   - deployment.yaml
+  - fts3rest.yaml
+  - fts3mon.yaml
   - service.yaml
   - cronjobs.yaml
 
@@ -27,5 +29,16 @@ secretGenerator:
     files:
     - password=etc/secrets/fts3db-fts3-password
     - username=etc/secrets/fts3db-username
-    - conn-str=etc/secrets/fts3db-connection-string
+#    - conn-str=etc/secrets/fts3db-connection-string
+    - conn-str=etc/secrets/fts3db-connection-string-cluster
     - db-name=etc/secrets/fts3db-name
+  - name: fts-rest-entrypoint
+    options:
+      disableNameSuffixHash: true
+    files:
+    - docker-entrypoint.sh=etc/docker-entrypoint.sh
+
+configMapGenerator:
+  - name: supervisord-conf
+    files:
+    - supervisord.conf=etc/supervisord.conf
