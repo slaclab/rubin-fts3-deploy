@@ -1,0 +1,19 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Backup
+metadata:
+  name: fts3-db-cluster-solo-backup
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster-solo
+  args:
+    - --verbose
+  storage:
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 40Gi
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: wekafs--sdf-k8s01
+

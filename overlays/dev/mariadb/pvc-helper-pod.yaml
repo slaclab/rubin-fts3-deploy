@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-helper
+  namespace: fts3-db
+spec:
+  containers:
+  - name: helper
+    image: alpine
+    command: ["sh", "-c", "while true; do sleep 30; done"]
+    volumeMounts:
+    - name: my-storage
+      mountPath: /mnt/pvc
+  volumes:
+  - name: my-storage
+    persistentVolumeClaim:
+      claimName: fts3-db-cluster-solo-backup

@@ -1,0 +1,18 @@
+# Define the 'fts3' user in the database, and create the grants needed for the FTS3 service.
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: fts3-solo-user
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster-solo
+  passwordSecretKeyRef:
+    name: fts3-db
+    key: password
+  name: fts3
+  maxUserConnections: 0
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 30s
+  retryInterval: 5s
