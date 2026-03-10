@@ -1,5 +1,5 @@
 
 bases:
-- mariadb-operator/
-- mariadb/
+#- mariadb-operator/
+#- mariadb/
 - fts3/
