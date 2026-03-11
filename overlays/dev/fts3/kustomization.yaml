@@ -42,3 +42,6 @@ configMapGenerator:
   - name: supervisord-conf
     files:
     - supervisord.conf=etc/supervisord.conf
+  - name: fts3web-libs-util
+    files:
+    - util.py=etc/util.py
