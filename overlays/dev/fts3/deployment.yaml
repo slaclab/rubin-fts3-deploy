@@ -51,22 +51,15 @@ spec:
           - name: grid-certificates
             mountPath: /out/
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.2
+        image: ghcr.io/fnal-fife/fts3-al9:3.14.2
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
           - name: fts3-logs
             mountPath: /out/
       containers:
-        - name: fts3-server-logs
-          image: busybox:latest
-          imagePullPolicy: Always
-          args: [/bin/sh, -c, 'tail -n+1 -F /var/log/fts-server-$(hostname).log']
-          volumeMounts:
-            - name: fts3-logs
-              mountPath: /var/log
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-al9:3.14.2
+          image: ghcr.io/fnal-fife/fts3-server:3.14.2-s6
           imagePullPolicy: Always
           resources:
             limits:

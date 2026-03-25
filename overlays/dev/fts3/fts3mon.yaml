@@ -35,6 +35,9 @@ spec:
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
+        - name: fts3web-libs-util
+          configMap:
+            name: fts3web-libs-util
       restartPolicy: Always
       initContainers:
       - name: fetch-crls-first-time
@@ -90,6 +93,9 @@ spec:
               mountPath: /etc/grid-security/certificates
             - name: fts3-logs
               mountPath: /var/log
+            - name: fts3web-libs-util
+              mountPath: /usr/share/fts3web/libs/util.py
+              subPath: util.py
           ports:
             - containerPort: 8449
               protocol: TCP
