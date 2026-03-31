@@ -50,7 +50,7 @@ spec:
           - name: grid-certificates
             mountPath: /out/
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-al9:3.14.2-slac
+        image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.4
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -58,7 +58,7 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-al9:3.14.2-slac
+          image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.4
           imagePullPolicy: Always
           resources:
             limits:

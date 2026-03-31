@@ -12,6 +12,7 @@ get-secrets:
 	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-fts3-password
 	vault kv get --field=fts3db-username secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-username
 	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-connection-string
+#	vault kv get --field=fts3db-connection-string-solo secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-connection-string
 	vault kv get --field=fts3db-name secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-name
 	mkdir -p mariadb/etc/secrets
 	vault kv get --field=fts3db-root-password secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-root-password
@@ -20,6 +21,7 @@ get-secrets:
 	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-fts3-password
 	vault kv get --field=fts3db-username secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-username
 	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-connection-string
+#	vault kv get --field=fts3db-connection-string-solo secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-connection-string
 	vault kv get --field=fts3db-name secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-name
 
 #cert-manager:
