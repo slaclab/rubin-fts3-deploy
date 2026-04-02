@@ -2,8 +2,13 @@ namespace: fts3-db
 
 resources:
   - ns.yaml
-  - mariadb-cluster.yaml
-  - fts3.yaml
+  #- mariadb-cluster.yaml
+  #- fts3.yaml
+  #- fts3-users.yaml
+  #- fts3-grants.yaml
+  - mariadb-cluster-solo.yaml
+  - fts3-solo-users.yaml
+  - fts3-solo-grants.yaml
 
 secretGenerator:
   - name: mariadb-root

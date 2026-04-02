@@ -63,7 +63,7 @@ MyOSG=false
 MaxNumberOfProcesses=25000
 
 #Maximum number of fts_url_copy processes to run on the host. This can be used to protect against resource exhaustion.
-MaxUrlCopyProcesses=30
+###MaxUrlCopyProcesses=30
 
 # Check for fts_url_copy processes that do not give their progress back
 CheckStalledTransfers = false

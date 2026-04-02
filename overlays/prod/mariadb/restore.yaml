@@ -1,0 +1,23 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Restore
+metadata:
+  name: restore-from-pvc
+  namespace: fts3-db
+spec:
+  mariaDbRef:
+    name: fts3-db-cluster-solo
+  volume:
+    persistentVolumeClaim:
+      claimName: fts3-db-cluster-solo-backup
+  database: fts3db
+  args:
+    - --verbose
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+  affinity:
+    antiAffinityEnabled: true
