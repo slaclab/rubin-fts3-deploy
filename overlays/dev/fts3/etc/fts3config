@@ -72,6 +72,10 @@ MonitoringMessaging=true
 
 LogLevel = DEBUG
 
+## Scheduler and MessagingProcessing Service settings
+# Wait time between scheduler runs (measured in seconds)
+SchedulingInterval = 1
+
 #Do not change this
 [roles]
 Public = vo:transfer
