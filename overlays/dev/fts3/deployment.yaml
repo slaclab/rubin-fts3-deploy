@@ -106,6 +106,23 @@ spec:
                 secretKeyRef:
                   name: fts3-db
                   key: db-name
+            #- name: FTS3_BROKER_PASSWORD
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_password
+            #- name: FTS3_BROKER_USERNAME
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_username
+            #- name: BROKER_DNS_ALIAS
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_dns_alias
+            #- name: STOMP_PORT
+            #  value: "61613"
             #- name: WEB_INTERFACE
             #  value: usdf-fts3-dev.slac.stanford.edu
             #- name: DATABASE_UPGRADE
