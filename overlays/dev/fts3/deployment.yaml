@@ -59,10 +59,13 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-server:3.14.2-s6
+          image: ghcr.io/fnal-fife/fts3-server:3.14.4-s6
           imagePullPolicy: Always
           resources:
             limits:
+              cpu: 4000m
+              memory: 20Gi
+            requests:
               cpu: 2000m
               memory: 20Gi
           volumeMounts:
@@ -103,6 +106,23 @@ spec:
                 secretKeyRef:
                   name: fts3-db
                   key: db-name
+            #- name: FTS3_BROKER_PASSWORD
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_password
+            #- name: FTS3_BROKER_USERNAME
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_username
+            #- name: BROKER_DNS_ALIAS
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: fts3-activemq-secrets
+            #      key: broker_dns_alias
+            #- name: STOMP_PORT
+            #  value: "61613"
             #- name: WEB_INTERFACE
             #  value: usdf-fts3-dev.slac.stanford.edu
             #- name: DATABASE_UPGRADE

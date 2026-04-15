@@ -32,11 +32,11 @@ spec:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 1
+      memory: 4Gi
     limits:
-      cpu: 300m
-      memory: 512Mi
+      cpu: 4
+      memory: 8Gi
 
   livenessProbe:
     initialDelaySeconds: 20

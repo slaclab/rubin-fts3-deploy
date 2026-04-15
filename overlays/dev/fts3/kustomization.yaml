@@ -37,6 +37,13 @@ secretGenerator:
       disableNameSuffixHash: true
     files:
     - docker-entrypoint.sh=etc/docker-entrypoint.sh
+#  - name: fts3-activemq-secrets
+#    options:
+#      disableNameSuffixHash: true
+#    files:
+#      - broker_password=etc/temp_secrets/activemq/broker_password
+#      - broker_username=etc/temp_secrets/activemq/broker_username
+#      - broker_dns_alias=etc/temp_secrets/activemq/broker_dns_alias
 
 configMapGenerator:
   - name: supervisord-conf
