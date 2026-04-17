@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fts3-records-cleaner
+  namespace: fts3
+  labels:
+    app: fts3-records-cleaner
+spec:
+  schedule: "2 4 */1 * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: fts3-configs
+              secret:
+                defaultMode: 420
+                secretName: fts3-configs
+            - name: fts3-logs
+              persistentVolumeClaim:
+                claimName: fts3-logs-pvc
+          restartPolicy: OnFailure
+          initContainers:
+          - name: prep-log-pvc
+            image: ghcr.io/fnal-fife/fts3-al9:3.14.2
+            imagePullPolicy: Always
+            command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
+            volumeMounts:
+              - name: fts3-logs
+                mountPath: /out/
+          containers:
+            - name: fts3
+              image: ghcr.io/fnal-fife/fts3-server:3.14.4-s6
+              imagePullPolicy: Always
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  envsubst < /opt/fts3/fts3-configs/fts3config > /etc/fts3/fts3config
+                  /usr/sbin/fts_db_cleaner -n 2>&1
+              resources:
+                limits:
+                  cpu: 512m
+                  memory: 1Gi
+                requests:
+                  cpu: 256m
+                  memory: 512Mi
+              volumeMounts:
+                - name: fts3-configs
+                  mountPath: /opt/fts3/fts3-configs
+                  readOnly: true
+                - name: fts3-logs
+                  mountPath: /var/log
+              env:
+                - name: MARIADB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: fts3-db
+                      key: username
+                - name: MARIADB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: fts3-db
+                      key: password
+                - name: MARIADB_CONNECTION_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: fts3-db
+                      key: conn-str
+                - name: FTS3_MARIADB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: fts3-db
+                      key: db-name
