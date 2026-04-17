@@ -8,6 +8,7 @@ resources:
   - fts3mon.yaml
   - service.yaml
   - cronjobs.yaml
+  - cleaner-cronjob.yaml
 
 secretGenerator:
   - name: fts3-configs
