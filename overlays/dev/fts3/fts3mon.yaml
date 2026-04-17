@@ -29,23 +29,17 @@ spec:
           secret:
             defaultMode: 420
             secretName: fts3-host-pems
-        - name: grid-certificates
-          persistentVolumeClaim:
-            claimName: grid-certificates-pvc
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
         - name: fts3web-libs-util
           configMap:
             name: fts3web-libs-util
+        - name: sdf-group-rubin
+          persistentVolumeClaim:
+            claimName: sdf-group-rubin
       restartPolicy: Always
       initContainers:
-      - name: fetch-crls-first-time
-        image: ghcr.io/fnal-fife/fetch-crl-cron:latest
-        imagePullPolicy: Always
-        volumeMounts:
-          - name: grid-certificates
-            mountPath: /out/
       - name: prep-log-pvc
         image: ghcr.io/fnal-fife/fts3-mon:3.14.2
         imagePullPolicy: Always
@@ -89,8 +83,10 @@ spec:
             - name: fts3-host-pems
               mountPath: /opt/fts3/fts3-host-pems
               readOnly: true
-            - name: grid-certificates
+            - name: sdf-group-rubin
               mountPath: /etc/grid-security/certificates
+              subPath: services/ddm/etc/grid-security/certificates
+              readOnly: true
             - name: fts3-logs
               mountPath: /var/log
             - name: fts3web-libs-util

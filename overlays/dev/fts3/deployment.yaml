@@ -29,13 +29,9 @@ spec:
           secret:
             defaultMode: 420
             secretName: fts3-host-pems
-        - name: fts-rest-entrypoint
-          secret:
-            defaultMode: 0750
-            secretName: fts-rest-entrypoint
-        - name: grid-certificates
+        - name: sdf-group-rubin
           persistentVolumeClaim:
-            claimName: grid-certificates-pvc
+            claimName: sdf-group-rubin
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
@@ -44,12 +40,6 @@ spec:
             name: supervisord-conf
       restartPolicy: Always
       initContainers:
-      - name: fetch-crls-first-time
-        image: ghcr.io/fnal-fife/fetch-crl-cron:latest
-        imagePullPolicy: Always
-        volumeMounts:
-          - name: grid-certificates
-            mountPath: /out/
       - name: prep-log-pvc
         image: ghcr.io/fnal-fife/fts3-al9:3.14.2
         imagePullPolicy: Always
@@ -75,16 +65,15 @@ spec:
             - name: fts3-host-pems
               mountPath: /opt/fts3/fts3-host-pems
               readOnly: true
-            - name: grid-certificates
+            - name: sdf-group-rubin
               mountPath: /etc/grid-security/certificates
+              subPath: services/ddm/etc/grid-security/certificates
+              readOnly: true
             - name: fts3-logs
               mountPath: /var/log
             - name: supervisord-conf
               mountPath: /etc/supervisord.conf
               subPath: supervisord.conf
-            - name: fts-rest-entrypoint
-              mountPath: /tmp/docker-entrypoint.sh
-              subPath: docker-entrypoint.sh
           env:
             - name: MARIADB_USER
               valueFrom:
