@@ -6,6 +6,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - cronjobs.yaml
+  - grid-certificates-job.yaml
 
 secretGenerator:
   - name: fts3-configs

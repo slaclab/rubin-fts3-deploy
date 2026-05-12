@@ -43,12 +43,6 @@ spec:
             name: supervisord-conf
       restartPolicy: Always
       initContainers:
-      - name: fetch-crls-first-time
-        image: ghcr.io/fnal-fife/fetch-crl-cron:latest
-        imagePullPolicy: Always
-        volumeMounts:
-          - name: grid-certificates
-            mountPath: /out/
       - name: prep-log-pvc
         image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.4
         imagePullPolicy: Always
@@ -76,6 +70,7 @@ spec:
               readOnly: true
             - name: grid-certificates
               mountPath: /etc/grid-security/certificates
+              readOnly: true
             - name: fts3-logs
               mountPath: /var/log
             - name: supervisord-conf

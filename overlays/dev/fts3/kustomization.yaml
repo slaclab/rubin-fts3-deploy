@@ -8,6 +8,7 @@ resources:
   - fts3mon.yaml
   - service.yaml
   - cronjobs.yaml
+  - grid-certificates-job.yaml
   - cleaner-cronjob.yaml
 
 secretGenerator:
