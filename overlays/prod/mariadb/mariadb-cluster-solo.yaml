@@ -29,6 +29,7 @@ spec:
 
     [mysqld]
     max_user_connections=0
+    innodb_buffer_pool_size=4G
 
   resources:
     requests:
