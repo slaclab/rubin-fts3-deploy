@@ -60,7 +60,7 @@ spec:
               memory: 24Gi
             requests:
               cpu: 4000m
-              memory: 12Gi
+              memory: 20Gi
           volumeMounts:
             - name: fts3-configs
               mountPath: /opt/fts3/fts3-configs
