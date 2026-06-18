@@ -5,7 +5,7 @@ metadata:
   labels:
     app: fts3
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: fts3
