@@ -1,0 +1,24 @@
+namespace: activemq-artemis-operator
+
+resources:
+  - activemqArtemis.yaml
+  - service.yaml
+
+secretGenerator:
+  - name: fts3-jaas-config
+    options:
+      disableNameSuffixHash:  true
+    files:
+      - login.config=etc/secrets/login.config
+      - users.properties=etc/secrets/users.properties
+      - roles.properties=etc/secrets/roles.properties
+  - name: config-bp
+    options:
+      disableNameSuffixHash:  true
+    files:
+      - config.json=etc/secrets/config-bp.json
+  - name: stomp-logging-config
+    options:
+      disableNameSuffixHash:  true
+    files:
+      - logging.properties=etc/secrets/logging.properties

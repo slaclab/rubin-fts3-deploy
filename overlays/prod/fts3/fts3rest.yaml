@@ -38,7 +38,7 @@ spec:
       restartPolicy: Always
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-rest:3.14.2
+        image: ghcr.io/fnal-fife/fts3-rest:3.14.2-s6
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -67,7 +67,7 @@ spec:
             - name: fts3-logs
               mountPath: /var/log
         - name: fts3-rest
-          image: ghcr.io/fnal-fife/fts3-rest:3.14.2
+          image: ghcr.io/fnal-fife/fts3-rest:3.14.2-s6
           imagePullPolicy: Always
           resources:
             limits:

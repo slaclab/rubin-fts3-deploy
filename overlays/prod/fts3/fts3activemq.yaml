@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fts3-server
+  name: fts3-activemq
   labels:
-    app: fts3-server
+    app: fts3-activemq
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: fts3-server
+      app: fts3-activemq
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: fts3-server
+        app: fts3-activemq
     spec:
       volumes:
         - name: fts3-configs
@@ -41,7 +41,7 @@ spec:
       restartPolicy: Always
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-server:3.14.4-s6-20260630
+        image: ghcr.io/fnal-fife/fts3-al9:3.14.2
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -49,15 +49,15 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-server:3.14.4-s6-20260630
+          image: ghcr.io/fnal-fife/fts3-activemq:3.14.4-s6-20260630
           imagePullPolicy: Always
           resources:
             limits:
-              cpu: 4000m
-              memory: 20Gi
+              cpu: 1000m
+              memory: 2Gi
             requests:
-              cpu: 2000m
-              memory: 20Gi
+              cpu: 1000m
+              memory: 512Mi
           volumeMounts:
             - name: fts3-configs
               mountPath: /opt/fts3/fts3-configs
@@ -73,35 +73,20 @@ spec:
             - name: fts3-messages
               mountPath: /var/lib/fts3/messages
           env:
-            - name: MARIADB_USER
+            - name: FTS3_BROKER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fts3-db
-                  key: username
-            - name: MARIADB_PASSWORD
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_PASSWORD
+            - name: FTS3_BROKER_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: fts3-db
-                  key: password
-            - name: MARIADB_CONNECTION_STRING
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_USERNAME
+            - name: FTS3_BROKER_DNS_ALIAS
               valueFrom:
                 secretKeyRef:
-                  name: fts3-db
-                  key: conn-str
-            - name: FTS3_MARIADB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: fts3-db
-                  key: db-name
-          readinessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -i
-              - -c
-              - mysql --host=${MARIADB_CONNECTION_STRING} -P 3306 --user=$MARIADB_USER --password="$MARIADB_PASSWORD" --database=fts3db -e 'SELECT 1'
-            failureThreshold: 3
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_DNS_ALIAS
+            - name: STOMP_PORT
+              value: "61613"

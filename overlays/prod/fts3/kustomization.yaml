@@ -9,6 +9,7 @@ resources:
   - fts3server.yaml
   - fts3mon.yaml
   - fts3rest.yaml
+  - fts3activemq.yaml
 
 secretGenerator:
   - name: fts3-configs
@@ -17,6 +18,22 @@ secretGenerator:
     files:
     - fts3config=etc/fts3config
     - fts3restconfig=etc/fts3restconfig
+    - fts-activemq.conf=etc/fts-activemq.conf
+  - name: fts3-server-config
+    options:
+      disableNameSuffixHash: false
+    files:
+    - fts3config=etc/fts3config
+  - name: fts3-rest-config
+    options:
+      disableNameSuffixHash: false
+    files:
+    - fts3restconfig=etc/fts3restconfig
+  - name: fts3-activemq-configs
+    options:
+      disableNameSuffixHash: false
+    files:
+    - fts3config=etc/fts3config
     - fts-activemq.conf=etc/fts-activemq.conf
   - name: fts3-host-pems
     options:
@@ -32,6 +49,11 @@ secretGenerator:
     - username=etc/secrets/fts3db-username
     - conn-str=etc/secrets/fts3db-connection-string
     - db-name=etc/secrets/fts3db-name
+  - name: fts3-activemq-secrets
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - etc/secrets/activemq-secrets
 
 configMapGenerator:
   - name: fluent-bit-conf

@@ -25,7 +25,7 @@ Alias=usdf-fts3.slac.stanford.edu
 SiteName=USDF Production
 
 # Enable or disable monitoring messages (see fts-activemq.conf)
-MonitoringMessaging=false
+MonitoringMessaging=true
 
 # Directory where the internal FTS3 messages are written
 MessagingDirectory=/var/lib/fts3/messages

@@ -3,3 +3,4 @@ bases:
 #- mariadb-operator/
 - mariadb/
 - fts3/
+- activemq/

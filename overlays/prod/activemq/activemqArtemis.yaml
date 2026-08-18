@@ -1,0 +1,60 @@
+apiVersion: broker.amq.io/v1beta1
+kind: ActiveMQArtemis
+metadata:
+  name: fts3-artemis
+  namespace: activemq-artemis-operator
+spec:
+  deploymentPlan:
+    size: 1
+    persistenceEnabled: true
+    journalType: "NIO"
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "500m"
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+    storage:
+      size: "10Gi"
+      storageClassName: "wekafs--sdf-k8s01"
+    podSecurityContext:
+      sysctls:
+        - name: net.ipv4.tcp_keepalive_time
+          value: "300"
+        - name: net.ipv4.tcp_keepalive_intvl
+          value: "15"
+        - name: net.ipv4.tcp_keepalive_probes
+          value: "5"
+    extraMounts:
+      secrets:
+        - config-bp
+        - fts3-jaas-config
+        - stomp-logging-config
+
+  console:
+    expose: true
+    ingressHost:  $(CR_NAME)-$(CR_NAMESPACE)-$(ITEM_NAME)
+
+  acceptors:
+    - name: "stomp"
+      protocols: "stomp"
+      port: 61613
+      supportAdvisory: true
+      connectionsAllowed: 100
+      multicastPrefix: "/topic/"
+      anycastPrefix: "/queue/"
+      ingressHost:  $(CR_NAME)-$(CR_NAMESPACE)-$(ITEM_NAME)
+
+  brokerProperties:
+    - "acceptorConfigurations.stomp.extraParams.heartBeatToConnectionTtlModifier=3.0"
+    - "acceptorConfigurations.stomp.extraParams.stompMaxFramePayloadLength=1000000"
+    - "acceptorConfigurations.stomp.extraParams.tcpKeepAlive=true"
+    - "divertConfigurations.copy-to-usdf-rucio.address=transfer.fts_monitoring_complete"
+    - "divertConfigurations.copy-to-usdf-rucio.forwardingAddress=fts_monitoring_complete.usdf_rucio"
+    - "divertConfigurations.copy-to-usdf-rucio.routingType=ANYCAST"
+    - "divertConfigurations.copy-to-usdf-rucio.exclusive=false"
+    - "divertConfigurations.copy-to-usdf-rucio-dev.address=transfer.fts_monitoring_complete"
+    - "divertConfigurations.copy-to-usdf-rucio-dev.forwardingAddress=fts_monitoring_complete.usdf_rucio_dev"
+    - "divertConfigurations.copy-to-usdf-rucio-dev.routingType=ANYCAST"
+    - "divertConfigurations.copy-to-usdf-rucio-dev.exclusive=false"
