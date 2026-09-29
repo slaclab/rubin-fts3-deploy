@@ -70,7 +70,7 @@ SchedulingInterval = 1
 # or, depending on the swapping policy, may not even prevent overloads if the kernel
 # starts swapping before the free RAM decreases until it reaches the value of MinRequiredFreeRAM
 # The default is 400 / Use 0 to disable the check
-#MaxUrlCopyProcesses=400
+MaxUrlCopyProcesses=200
 
 # Set the UrlCopyProcess ping and transfer update interval.
 # For throughput monitoring (Profiling is enabled), a lower value is better.
