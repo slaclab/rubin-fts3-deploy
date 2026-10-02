@@ -5,7 +5,9 @@ helm:
 	helm repo add mariadb-operator https://helm.mariadb.com/mariadb-operator
 	helm repo update mariadb-operator
 
-get-secrets:
+get-secrets: get-fts-secrets get-mariadb-secrets get-activemq-secrets
+
+get-fts-secrets:
 	mkdir -p fts3/etc/secrets
 	vault kv get --field=hostcert.pem secret/rubin/usdf-fts3/fts3  > fts3/etc/secrets/hostcert.pem
 	vault kv get --field=hostkey.pem secret/rubin/usdf-fts3/fts3  > fts3/etc/secrets/hostkey.pem
@@ -15,6 +17,8 @@ get-secrets:
 #	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-connection-string
 	vault kv get --field=fts3db-connection-string-solo secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-connection-string
 	vault kv get --field=fts3db-name secret/rubin/usdf-fts3/fts3db  > fts3/etc/secrets/fts3db-name
+
+get-mariadb-secrets:
 	mkdir -p mariadb/etc/secrets
 	vault kv get --field=fts3db-root-password secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-root-password
 	vault kv get --field=fts3db-fts3-password secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-fts3-password
@@ -23,9 +27,11 @@ get-secrets:
 	vault kv get --field=fts3db-username secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-username
 #	vault kv get --field=fts3db-connection-string secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-connection-string
 	vault kv get --field=fts3db-connection-string-solo secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-connection-string
+
+get-activemq-secrets:
 	mkdir -p activemq/etc/secrets
-	vault kv get --field=config-bp.json secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/config-bp.json
-	vault kv get --field=fts3db-name secret/rubin/usdf-fts3/fts3db  > mariadb/etc/secrets/fts3db-name
+#	vault kv get --field=config-bp.properties secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/config-bp.properties
+	vault kv get --field=security-roles-bp.properties secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/security-roles-bp.properties
 	vault kv get --field=logging.properties secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/logging.properties
 	vault kv get --field=login.config secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/login.config
 	vault kv get --field=roles.properties secret/rubin/usdf-fts3/activemq  > activemq/etc/secrets/roles.properties

@@ -12,11 +12,16 @@ secretGenerator:
       - login.config=etc/secrets/login.config
       - users.properties=etc/secrets/users.properties
       - roles.properties=etc/secrets/roles.properties
+  - name: security-roles-bp
+    options:
+      disableNameSuffixHash:  true
+    files:
+      - security-roles-bp.properties=etc/secrets/security-roles-bp.properties
   - name: config-bp
     options:
       disableNameSuffixHash:  true
     files:
-      - config.json=etc/secrets/config-bp.json
+      - config-bp.properties=etc/config-bp.properties
   - name: stomp-logging-config
     options:
       disableNameSuffixHash:  true

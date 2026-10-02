@@ -29,6 +29,7 @@ spec:
     extraMounts:
       secrets:
         - config-bp
+        - security-roles-bp
         - fts3-jaas-config
         - stomp-logging-config
 
@@ -54,7 +55,7 @@ spec:
     - "divertConfigurations.copy-to-usdf-rucio.forwardingAddress=fts_monitoring_complete.usdf_rucio"
     - "divertConfigurations.copy-to-usdf-rucio.routingType=ANYCAST"
     - "divertConfigurations.copy-to-usdf-rucio.exclusive=false"
-    - "divertConfigurations.copy-to-usdf-rucio-dev.address=transfer.fts_monitoring_complete"
-    - "divertConfigurations.copy-to-usdf-rucio-dev.forwardingAddress=fts_monitoring_complete.usdf_rucio_dev"
-    - "divertConfigurations.copy-to-usdf-rucio-dev.routingType=ANYCAST"
-    - "divertConfigurations.copy-to-usdf-rucio-dev.exclusive=false"
+    # - "divertConfigurations.copy-to-usdf-rucio-dev.address=transfer.fts_monitoring_complete"
+    # - "divertConfigurations.copy-to-usdf-rucio-dev.forwardingAddress=fts_monitoring_complete.usdf_rucio_dev"
+    # - "divertConfigurations.copy-to-usdf-rucio-dev.routingType=ANYCAST"
+    # - "divertConfigurations.copy-to-usdf-rucio-dev.exclusive=false"
