@@ -29,6 +29,7 @@ spec:
     extraMounts:
       secrets:
         - config-bp
+        - security-roles-bp
         - fts3-jaas-config
         - stomp-logging-config
 
