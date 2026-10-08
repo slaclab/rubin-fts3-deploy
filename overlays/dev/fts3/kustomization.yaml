@@ -15,7 +15,7 @@ resources:
 secretGenerator:
   - name: fts3-configs
     options:
-      disableNameSuffixHash: true
+      disableNameSuffixHash: false
     files:
     - fts3config=etc/fts3config
     - fts3restconfig=etc/fts3restconfig
@@ -32,24 +32,10 @@ secretGenerator:
     files:
     - password=etc/secrets/fts3db-fts3-password
     - username=etc/secrets/fts3db-username
-#    - conn-str=etc/secrets/fts3db-connection-string
     - conn-str=etc/secrets/fts3db-connection-string-cluster
     - db-name=etc/secrets/fts3db-name
-  - name: fts-rest-entrypoint
-    options:
-      disableNameSuffixHash: true
-    files:
-    - docker-entrypoint.sh=etc/docker-entrypoint.sh
   - name: fts3-activemq-secrets
     options:
       disableNameSuffixHash: true
     envs:
       - etc/secrets/activemq-secrets
-
-configMapGenerator:
-  - name: supervisord-conf
-    files:
-    - supervisord.conf=etc/supervisord.conf
-  - name: fts3web-libs-util
-    files:
-    - util.py=etc/util.py

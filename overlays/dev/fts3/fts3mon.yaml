@@ -35,13 +35,13 @@ spec:
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
-        - name: fts3web-libs-util
-          configMap:
-            name: fts3web-libs-util
       restartPolicy: Always
+      securityContext:
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-mon:3.14.2-s6-20260709
+        image: ghcr.io/fnal-fife/fts3-mon:3.14.3-0.2.1
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -70,7 +70,7 @@ spec:
             - name: fts3-logs
               mountPath: /var/log
         - name: fts3-mon
-          image: ghcr.io/fnal-fife/fts3-mon:3.14.2-s6-20260709
+          image: ghcr.io/fnal-fife/fts3-mon:3.14.3-0.2.1
           imagePullPolicy: Always
           resources:
             limits:
@@ -88,9 +88,6 @@ spec:
               readOnly: true
             - name: fts3-logs
               mountPath: /var/log
-            - name: fts3web-libs-util
-              mountPath: /usr/share/fts3web/libs/util.py
-              subPath: util.py
           ports:
             - containerPort: 8449
               protocol: TCP

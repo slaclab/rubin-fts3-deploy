@@ -36,9 +36,12 @@ spec:
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
       restartPolicy: Always
+      securityContext:
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-rest:3.14.2-s6
+        image: ghcr.io/fnal-fife/fts3-rest:3.14.3-0.2.0
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -67,7 +70,7 @@ spec:
             - name: fts3-logs
               mountPath: /var/log
         - name: fts3-rest
-          image: ghcr.io/fnal-fife/fts3-rest:3.14.2-s6
+          image: ghcr.io/fnal-fife/fts3-rest:3.14.3-0.2.0
           imagePullPolicy: Always
           resources:
             limits:
