@@ -39,9 +39,12 @@ spec:
           persistentVolumeClaim:
             claimName: fts3-messages-pvc
       restartPolicy: Always
+      securityContext:
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-al9:3.14.2
+        image: ghcr.io/fnal-fife/fts3-server:3.14.4-0.1.0
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -49,7 +52,7 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-server:3.14.4-s6-20260630
+          image: ghcr.io/fnal-fife/fts3-server:3.14.4-0.1.0
           imagePullPolicy: Always
           resources:
             limits:
@@ -93,27 +96,6 @@ spec:
                 secretKeyRef:
                   name: fts3-db
                   key: db-name
-            #- name: FTS3_BROKER_PASSWORD
-            #  valueFrom:
-            #    secretKeyRef:
-            #      name: fts3-activemq-secrets
-            #      key: broker_password
-            #- name: FTS3_BROKER_USERNAME
-            #  valueFrom:
-            #    secretKeyRef:
-            #      name: fts3-activemq-secrets
-            #      key: broker_username
-            #- name: BROKER_DNS_ALIAS
-            #  valueFrom:
-            #    secretKeyRef:
-            #      name: fts3-activemq-secrets
-            #      key: broker_dns_alias
-            #- name: STOMP_PORT
-            #  value: "61613"
-            #- name: WEB_INTERFACE
-            #  value: usdf-fts3-dev.slac.stanford.edu
-            #- name: DATABASE_UPGRADE
-            #  value: "yes"
           readinessProbe:
             exec:
               command:
