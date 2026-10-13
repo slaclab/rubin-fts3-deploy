@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: artemis-restart
+  namespace: activemq-artemis-operator
+spec:
+  schedule: "*/30 * * * *" # Runs every 30 minutes
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 60
+      template:
+        spec:
+          serviceAccountName: artemis-restarter
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  kubectl rollout restart statefulset/fts3-artemis-ss \
+                    -n activemq-artemis-operator
+          restartPolicy: OnFailure
