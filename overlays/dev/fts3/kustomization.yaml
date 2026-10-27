@@ -3,7 +3,8 @@ namespace: fts3
 resources:
   - ns.yaml
   - pvcs.yaml
-  - deployment.yaml
+#  - deployment.yaml
+  - fts-server-ss.yaml
   - fts3rest.yaml
   - fts3mon.yaml
   - fts3activemq.yaml
