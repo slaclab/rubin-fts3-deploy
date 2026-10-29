@@ -6,10 +6,9 @@ resources:
   - service.yaml
   - cronjobs.yaml
   - grid-certificates-job.yaml
-  - fts3server.yaml
+  - fts-server-ss.yaml
   - fts3mon.yaml
   - fts3rest.yaml
-  - fts3activemq.yaml
 
 secretGenerator:
   - name: fts3-configs
