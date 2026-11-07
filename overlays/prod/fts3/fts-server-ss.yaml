@@ -1,24 +1,20 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: fts3
+  name: fts3-server
   labels:
-    app: fts3
+    app: fts3-server
 spec:
-  replicas: 1
+  serviceName: usdf-fts3-server
+  replicas: 5
   selector:
     matchLabels:
-      app: fts3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-  minReadySeconds: 5
+      app: fts3-server
+  minReadySeconds: 10
   template:
     metadata:
       labels:
-        app: fts3
+        app: fts3-server
     spec:
       volumes:
         - name: fts3-configs
@@ -35,16 +31,16 @@ spec:
         - name: fts3-logs
           persistentVolumeClaim:
             claimName: fts3-logs-pvc
-        - name: fluent-bit-conf
-          configMap:
-            name: fluent-bit-conf
-        - name: supervisord-conf
-          configMap:
-            name: supervisord-conf
+        - name: fts3-messages
+          emptyDir:
+            sizeLimit: 10Gi
       restartPolicy: Always
+      securityContext:
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
       initContainers:
       - name: prep-log-pvc
-        image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.4
+        image: ghcr.io/fnal-fife/fts3-server:3.14.4-0.2.0
         imagePullPolicy: Always
         command: ["/bin/sh", "-c", "cp -r /var/log/* /out/"]
         volumeMounts:
@@ -52,7 +48,7 @@ spec:
             mountPath: /out/
       containers:
         - name: fts3
-          image: ghcr.io/fnal-fife/fts3-al9:fts-3.14.4
+          image: ghcr.io/fnal-fife/fts3-server:3.14.4-0.2.0
           imagePullPolicy: Always
           resources:
             limits:
@@ -73,14 +69,8 @@ spec:
               readOnly: true
             - name: fts3-logs
               mountPath: /var/log
-            - name: supervisord-conf
-              mountPath: /etc/supervisord.conf
-              subPath: supervisord.conf
-          ports:
-            - containerPort: 8446
-              protocol: TCP
-            - containerPort: 8449
-              protocol: TCP
+            - name: fts3-messages
+              mountPath: /var/lib/fts3/messages
           env:
             - name: MARIADB_USER
               valueFrom:
@@ -102,10 +92,6 @@ spec:
                 secretKeyRef:
                   name: fts3-db
                   key: db-name
-            - name: WEB_INTERFACE
-              value: usdf-fts3.slac.stanford.edu
-            #- name: DATABASE_UPGRADE
-            #  value: "yes"
           readinessProbe:
             exec:
               command:
@@ -118,12 +104,45 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-        - name: fluent-bit
-          image: fluent/fluent-bit:4.0.7-debug
+        - name: fts-activmq
+          image: ghcr.io/fnal-fife/fts3-activemq:3.14.4-0.1.0
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 1000m
+              memory: 512Mi
           volumeMounts:
-            - name: fluent-bit-conf
-              mountPath: /fluent-bit/etc/fluent-bit.conf
-              subPath: fluent-bit.conf
+            - name: fts3-configs
+              mountPath: /opt/fts3/fts3-configs
+              readOnly: true
+            - name: fts3-host-pems
+              mountPath: /opt/fts3/fts3-host-pems
+              readOnly: true
+            - name: grid-certificates
+              mountPath: /etc/grid-security/certificates
+              readOnly: true
             - name: fts3-logs
               mountPath: /var/log
+            - name: fts3-messages
+              mountPath: /var/lib/fts3/messages
+          env:
+            - name: FTS3_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_PASSWORD
+            - name: FTS3_BROKER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_USERNAME
+            - name: FTS3_BROKER_DNS_ALIAS
+              valueFrom:
+                secretKeyRef:
+                  name: fts3-activemq-secrets
+                  key: FTS3_BROKER_DNS_ALIAS
+            - name: STOMP_PORT
+              value: "61613"
